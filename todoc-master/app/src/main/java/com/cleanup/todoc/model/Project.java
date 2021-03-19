@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "project_table")
 public class Project {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private final long id;
     private final String name;
     private final int color;

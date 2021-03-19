@@ -1,7 +1,5 @@
 package com.cleanup.todoc;
 
-import android.graphics.Color;
-
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
@@ -19,7 +17,6 @@ import org.junit.runner.RunWith;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -34,8 +31,8 @@ public class DataBaseInstrumentedTest {
     private SaveDatabase database;
 
     // DATA SET FOR TEST
-    private static final Project project = new Project(1L, "Project my project", Color.RED);
-    private static final Task task = new Task(1, 2L, "aaa", new Date().getTime());
+    private static final Project project = new Project(4L, "Project my project", 0xFFEADAD1);
+    private static final Task task = new Task(1, 4L, "aaa", new Date().getTime());
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -70,19 +67,21 @@ public class DataBaseInstrumentedTest {
         // TEST this project is created in Database
         List<Project> projects = LiveDataTestUtil.getValue(this.database.projectDao().getProject());
         assertEquals(1, projects.size());
-
+        assertTrue(projects.get(0).getId() == project.getId() && projects.get(0).getName().equals("Project my project"));
     }
 
     @Test
     public void createAndUpdateTaskInDatabase() throws InterruptedException {
         // Create new Task, update List Task in Database.
+        this.database.projectDao().createProject(project);
         this.database.taskDao().insertTask(task);
         Task taskAdded = LiveDataTestUtil.getValue(this.database.taskDao().getTask()).get(0);
         this.database.taskDao().updateTask(taskAdded);
         List<Task> tasks = LiveDataTestUtil.getValue(this.database.taskDao().getTask());
+        List<Project> projects = LiveDataTestUtil.getValue(this.database.projectDao().getProject());
         //Verify this task has been added to the database in relation to the project
-        assertEquals(task.getName(), tasks.get(0).getName());
-        assertTrue(tasks.size() == 1 && Objects.requireNonNull(tasks.get(0).getProject()).getName().equals("Projet Lucidia"));
+        assertTrue(tasks.size() == 1 && projects.get(0).getName().equals("Project my project"));
+        assertEquals(tasks.get(0).getProjectId(), projects.get(0).getId());
     }
 
     @Test

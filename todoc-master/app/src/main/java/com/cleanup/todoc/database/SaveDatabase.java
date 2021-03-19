@@ -27,7 +27,8 @@ public abstract class SaveDatabase extends RoomDatabase {
     public static synchronized SaveDatabase getInstance(Context context) {
         if (Instance == null) {
             Instance = Room.databaseBuilder(context.getApplicationContext(),
-                     SaveDatabase.class, "MyDatabase.db").addCallback(prepopulateDatabase())
+                     SaveDatabase.class, "MyDatabase.db")
+                    .addCallback(prepopulateDatabase())
                     .build();
         }
         return Instance;
