@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.events.DeleteTaskListener;
+import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 public class TasksAdapter extends RecyclerView.Adapter<TaskViewHolder> {
 
+    private List<Project> projects;
     private List<Task> tasks;
     private final DeleteTaskListener deleteTaskListener;
 
@@ -38,7 +40,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TaskViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder taskViewHolder, int position) {
-        taskViewHolder.bind(tasks.get(position), deleteTaskListener);
+        taskViewHolder.bind(tasks.get(position), deleteTaskListener, projects);
     }
 
     @Override
@@ -53,6 +55,11 @@ public class TasksAdapter extends RecyclerView.Adapter<TaskViewHolder> {
      */
     void updateTasks(List<Task> tasks) {
         this.tasks = tasks;
+        notifyDataSetChanged();
+    }
+
+    void updateProjects(@NonNull final List<Project> projects) {
+        this.projects = projects;
         notifyDataSetChanged();
     }
 }

@@ -14,6 +14,8 @@ import com.cleanup.todoc.events.DeleteTaskListener;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -61,19 +63,27 @@ public class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         ButterKnife.bind(this, itemView);
     }
 
+    public Project getCurrentProject (Task task, List<Project> projects) {
+        for(Project project : projects) {
+            if(project.getId() == task.getProjectId())
+                return project;
+        }
+        return null;
+    }
+
     /**
-     * Binds a task to the item view.
-     *
-     * @param task the task to bind in the item view
+     * Binds a task and project to the item view.
+     *  @param task the task to bind in the item view
      * @param deleteTaskListener the listener for when a task needs to be deleted to set
+     * @param projects the project to bind the item view.
      */
-    void bind(Task task, DeleteTaskListener deleteTaskListener) {
+    void bind(Task task, DeleteTaskListener deleteTaskListener, List<Project> projects) {
         this.deleteTaskListener = deleteTaskListener;
         lblTaskName.setText(task.getName());
         imgDelete.setOnClickListener(this);
         imgDelete.setTag(task);
 
-        final Project taskProject = task.getProject();
+        final Project taskProject = getCurrentProject(task, projects);
         if (taskProject != null) {
             imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
             lblProjectName.setText(taskProject.getName());

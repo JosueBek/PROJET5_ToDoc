@@ -182,8 +182,9 @@ public class MainActivity extends BaseActivity implements DeleteTaskListener {
         viewModel = new ViewModelProvider(this, modelFactory).get(TaskViewModel.class);
     }
 
-    public void getAllProject(List<Project> projects) {
+    public void  getAllProject(List<Project> projects) {
         allProjects = projects;
+        adapter.updateProjects(projects);
     }
 
     public void currentProjectInData() {
